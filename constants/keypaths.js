@@ -20,6 +20,8 @@ const kpBeforeNextContactorDelay = ['delays', 'beforeNextContactor']
 const kpContactorEnabledTimestamp = ['delays', 'contactorEnabledAt']
 const kpContactorDisabledTimestamp = ['delays', 'contactorDisabledAt']
 const kpContactorEnabled = ['storage', 'contactorEnabled']
+const kpLampsEncs = ['storage', 'lampsEncs']
+const kpContactorsEncs = ['storage', 'contactorsEncs']
 
 module.exports = {
   kpHMI,
@@ -44,4 +46,6 @@ module.exports = {
   kpContactorEnabledTimestamp,
   kpContactorDisabledTimestamp,
   kpContactorEnabled,
+  kpLampsEncs,
+  kpContactorsEncs,
 }

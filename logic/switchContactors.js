@@ -10,7 +10,8 @@ const {
   kpContactorEnabledTimestamp,
   kpContactorDisabledTimestamp,
   kpContactorEnabled,
-} = require('../constants/keypaths')
+  kpContactorsEncs,
+} = require("../constants/keypaths");
 
 const {
   getKPContactorTestEnded,
@@ -169,7 +170,7 @@ const switchContactors = (prevIO, IO) => {
   *  Enable/disable contactors  *
   ***************************** */
 
-  const encIndexList = [1, 2]
+  const encIndexList = IO.getIn(kpContactorsEncs)
 
   const allTestsAreCompleted = encIndexList
     .every(encIndex => prevIO.getIn(getKPContactorTestEnded(encIndex)))

@@ -9,7 +9,8 @@ const {
   kpIsTestRunning,
   kpIsTestStarted,
   kpLampTestCompleted,
-} = require('../constants/keypaths')
+  kpLampsEncs,
+} = require("../constants/keypaths");
 
 const {
   getKPLampTestEnded,
@@ -139,7 +140,7 @@ const switchLamps = (prevIO, IO) => {
   *  Enable/disable lamps  *
   ************************ */
 
-  const encIndexList = [1, 2]
+  const encIndexList = IO.getIn(kpLampsEncs)
 
   const allTestsAreCompleted = encIndexList
     .every(encIndex => prevIO.getIn(getKPLampTestEnded(encIndex)))

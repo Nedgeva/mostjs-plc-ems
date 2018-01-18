@@ -16,6 +16,12 @@ const IOBlueprintFactory = immutable.Record({
         /* contactors */
         contactors: Array(11).fill(false),
       },
+      enc4: {
+        /* lamps */
+        lamps: Array(0).fill(false),
+        /* contactors */
+        contactors: Array(0).fill(false),
+      },
     },
   },
   /* store communication there */
@@ -45,6 +51,8 @@ const IOBlueprintFactory = immutable.Record({
   },
   /* internal storage for algos */
   storage: {
+    lampsEncs: [1, 2, 4],
+    contactorsEncs: [1, 2, 4],
     isTestRunning: false,
     allLampsCompleted: false,
     allContactorsCompleted: false,
