@@ -20,7 +20,7 @@ const mapRegistersToIOScheme = (ioScheme) => {
   const registers = ioScheme.getIn(kpRawData)
 
   const enc1Lamps = regToBoolArray(registers[0])
-    .slice(0, 4)
+    .slice(0, 14)
 
   const enc1Contactors = regToBoolArray(registers[1])
     .slice(0, 5)

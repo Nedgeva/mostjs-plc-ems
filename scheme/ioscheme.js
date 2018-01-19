@@ -6,7 +6,7 @@ const IOBlueprintFactory = immutable.Record({
     discrete: {
       enc1: {
         /* lamps */
-        lamps: Array(4).fill(false),
+        lamps: Array(14).fill(false),
         /* contactors */
         contactors: Array(5).fill(false),
       },
