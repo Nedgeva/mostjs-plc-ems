@@ -24,17 +24,29 @@ const mapIOSchemeToRegisters = (ioScheme) => {
   const enc1Contactors = ioScheme.getIn(getKPContactorsOutput(1))
   const enc2Lamps = ioScheme.getIn(getKPLampsOutputs(2))
   const enc2Contactors = ioScheme.getIn(getKPContactorsOutput(2))
+  const enc4Lamps = ioScheme.getIn(getKPLampsOutputs(4))
+  const enc4Contactors = ioScheme.getIn(getKPContactorsOutput(4))
 
   const enc1LampsWord = boolArrayToBuffer(enc1Lamps)
-  const enc1ContactorsWord = boolArrayToBuffer(enc1Contactors)
+  const enc1ContactorsWord12 = boolArrayToBuffer(enc1Contactors.slice(0, 16))
+  const enc1ContactorsWord22 = boolArrayToBuffer(enc1Contactors.slice(15, 32))
   const enc2LampsWord = boolArrayToBuffer(enc2Lamps)
-  const enc2ContactorsWord = boolArrayToBuffer(enc2Contactors)
+  const enc2ContactorsWord12 = boolArrayToBuffer(enc2Contactors.slice(0, 16))
+  const enc2ContactorsWord22 = boolArrayToBuffer(enc2Contactors.slice(15, 32))
+  const enc4LampsWord = boolArrayToBuffer(enc4Lamps)
+  const enc4ContactorsWord12 = boolArrayToBuffer(enc4Contactors.slice(0, 16))
+  const enc4ContactorsWord22 = boolArrayToBuffer(enc4Contactors.slice(15, 20))
 
   const dataToWrite = [
     enc1LampsWord,
-    enc1ContactorsWord,
+    enc1ContactorsWord12,
+    enc1ContactorsWord22,
     enc2LampsWord,
-    enc2ContactorsWord,
+    enc2ContactorsWord12,
+    enc2ContactorsWord22,
+    enc4LampsWord,
+    enc4ContactorsWord12,
+    enc4ContactorsWord22,
   ]
 
   return ioScheme.updateIn(kpDataToWrite, () => dataToWrite)

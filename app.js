@@ -63,6 +63,6 @@ source
   .catch(ex => console.error(ex))
 
 source
-  .throttle(300)
+  .throttle(1000)
   .tap(pushSocketMessage)
   .drain()

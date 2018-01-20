@@ -21,7 +21,7 @@ const requestModbusRegisters = ioScheme =>
   new Promise((resolve, reject) => {
     const connection = ioScheme.getIn(kpMbTCPConnection)
 
-    connection.readHoldingRegisters({ address: 0, quantity: 8 }, (err, res) => {
+    connection.readHoldingRegisters({ address: 0, quantity: 9 }, (err, res) => {
       if (err) {
         return reject(err)
       }

@@ -8,19 +8,19 @@ const IOBlueprintFactory = immutable.Record({
         /* lamps */
         lamps: Array(14).fill(false),
         /* contactors */
-        contactors: Array(5).fill(false),
+        contactors: Array(32).fill(false),
       },
       enc2: {
         /* lamps */
         lamps: Array(8).fill(false),
         /* contactors */
-        contactors: Array(11).fill(false),
+        contactors: Array(32).fill(false),
       },
       enc4: {
         /* lamps */
-        lamps: Array(0).fill(false),
+        lamps: Array(7).fill(false),
         /* contactors */
-        contactors: Array(0).fill(false),
+        contactors: Array(20).fill(false),
       },
     },
   },
@@ -68,6 +68,11 @@ const IOBlueprintFactory = immutable.Record({
       enc2LampsEnded: false,
       enc2Contactors: 0,
       enc2ContactorsEnded: false,
+      enc4Lamps: 0,
+      enc4LampsBlinked: false,
+      enc4LampsEnded: false,
+      enc4Contactors: 0,
+      enc4ContactorsEnded: false,
     },
   },
 })
