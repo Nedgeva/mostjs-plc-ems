@@ -23,6 +23,10 @@ test.beforeEach((t) => {
     .getIn(getKPContactorsOutput(2))
     .length
 
+  const enc4ContactorsNum = ioScheme
+    .getIn(getKPContactorsOutput(4))
+    .length
+
   const ioWithTestDisabled = ioScheme
     .updateIn(kpIsTestStarted, () => false)
 
@@ -41,7 +45,7 @@ test.beforeEach((t) => {
     ioWithTestDisabled,
     ioWithTestEnabled,
     ioWithTestEnabledAndLampTestPassed,
-    ...Array(40).fill(ioWithTestDisabledAndLampTestPassed),
+    ...Array(173).fill(ioWithTestDisabledAndLampTestPassed),
   ]
 
   const fastForwardTime = () => {
@@ -54,6 +58,7 @@ test.beforeEach((t) => {
     ioWithTestEnabled,
     enc1ContactorsNum,
     enc2ContactorsNum,
+    enc4ContactorsNum,
   })
 
   const source = most
@@ -109,9 +114,37 @@ test('should enable/disable contactors one by one in enc 2', (t) => {
   }
 })
 
-test('contactor test should be completed', (t) => {
-  const startIndex = 2 + (t.context.enc1ContactorsNum * 2)
-    + 1 + (t.context.enc2ContactorsNum * 2) + 1
+test('should enable/disable contactors one by one in enc 4', (t) => {
+  const startIndex = 2
+    + (t.context.enc1ContactorsNum * 2)
+    + 1
+    + (t.context.enc2ContactorsNum * 2)
+    + 1
 
+  let truthIndex = 0
+  let i = startIndex
+
+  for (i; i < startIndex + (t.context.enc4ContactorsNum * 2); i += 2) {
+    const masterArray = Array(t.context.enc4ContactorsNum).fill(false)
+    masterArray[truthIndex] = true
+
+    t.deepEqual(
+      t.context.resultList[i].getIn(getKPContactorsOutput(4)),
+      masterArray,
+    )
+
+    truthIndex += 1
+  }
+})
+
+test('contactor test should be completed', (t) => {
+  const startIndex = 2 
+    + (t.context.enc1ContactorsNum * 2)
+    + 1 
+    + (t.context.enc2ContactorsNum * 2)
+    + 1
+    + (t.context.enc4ContactorsNum * 2)
+    + 1
+  
   t.is(t.context.resultList[startIndex].getIn(kpAllContactorsCompleted), true)
 })
