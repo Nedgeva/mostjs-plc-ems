@@ -8,6 +8,7 @@ const {
   kpAllLampsCompleted,
   kpIsTestRunning,
   kpIsTestStarted,
+  kpIsTestCancelled,
   kpLampTestCompleted,
   kpLampsEncs,
 } = require("../constants/keypaths");
@@ -68,7 +69,7 @@ const blinkLampsInEnclosure = (activeIO, prevIO) =>
     }
 
     // switch off all lamps of enclosure
-    // and set 1sec delay
+    // and set 1s delay
     if (encLampsBlinked && !encLampsEnded) {
       const IOWithDisabledLamps = disableAllLamps(activeIO, encIndex)
 
@@ -88,7 +89,11 @@ const blinkLampsInEnclosure = (activeIO, prevIO) =>
 const switchLamps = (prevIO, IO) => {
   const isTestStarted = IO.getIn(kpIsTestStarted)
   const isTestRunning = prevIO.getIn(kpIsTestRunning)
-  const isTestActive = isTestStarted || isTestRunning
+  const isTestCancelled = IO.getIn(kpIsTestCancelled)
+
+  const isTestActive = ((isTestStarted || isTestRunning)
+    && !isTestCancelled
+  )
 
   /* return early if no test running */
   if (!isTestActive) {

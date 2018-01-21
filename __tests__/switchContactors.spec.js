@@ -6,6 +6,7 @@ const mockdate = require('mockdate')
 
 const {
   kpIsTestStarted,
+  kpIsTestCancelled,
   kpLampTestCompleted,
   kpAllContactorsCompleted,
 } = require('../constants/keypaths')
@@ -145,6 +146,39 @@ test('contactor test should be completed', (t) => {
     + 1
     + (t.context.enc4ContactorsNum * 2)
     + 1
-  
+
   t.is(t.context.resultList[startIndex].getIn(kpAllContactorsCompleted), true)
+})
+
+test('contactor test should pay respect to cancellation', (t) => {
+  const keyPath1 = getKPContactorsOutput(1)
+
+  /* prepare test and run mostjs stream */
+  const ioWithTestEnabledAndLampTestPassed = ioScheme
+    .updateIn(kpIsTestStarted, () => true)
+    .updateIn(kpLampTestCompleted, () => true)
+
+  const ioWithTestCancelled = ioScheme
+    .updateIn(kpIsTestCancelled, () => true)
+    .updateIn(kpLampTestCompleted, () => true)
+
+  const ioSchemeList = [
+    ...Array(2).fill(ioWithTestEnabledAndLampTestPassed),
+    ioWithTestCancelled,
+    ...Array(6).fill(ioScheme.updateIn(kpLampTestCompleted, () => true)),
+  ]
+
+  const source = most
+    .from(ioSchemeList)
+    .loop(switchContactors, ioScheme)
+    .tap(() => mockdate.set(Date.now() + 2001))
+
+  const resultList = []
+
+  return source
+    .observe(x => resultList.push(x))
+    .then(() => t.deepEqual(
+      resultList[4].getIn(keyPath1), 
+      Array(t.context.enc1ContactorsNum).fill(false),
+    ))
 })

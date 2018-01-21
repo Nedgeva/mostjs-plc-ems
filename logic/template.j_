@@ -1,5 +1,9 @@
 const f = (prevIO, IO) => {
 
+  return {
+    seed: seed,
+    value: value,
+  }
 }
 
 module.exports = f

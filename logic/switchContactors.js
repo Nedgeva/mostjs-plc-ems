@@ -3,6 +3,7 @@ const {
   kpDelays,
   kpIsTestRunning,
   kpIsTestStarted,
+  kpIsTestCancelled,
   kpAllLampsCompleted,
   kpAllContactorsCompleted,
   kpBeforeContactorTurnoffDelay,
@@ -108,7 +109,11 @@ const blinkContactorsInEnclosure = (activeIO, prevIO) =>
 const switchContactors = (prevIO, IO) => {
   const isTestStarted = IO.getIn(kpIsTestStarted)
   const isTestRunning = prevIO.getIn(kpIsTestRunning)
-  const isTestActive = isTestStarted || isTestRunning
+  const isTestCancelled = IO.getIn(kpIsTestCancelled)
+
+  const isTestActive = ((isTestStarted || isTestRunning)
+    && !isTestCancelled
+  )
 
   /* return early if no test running */
   if (!isTestActive) {

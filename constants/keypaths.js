@@ -13,6 +13,7 @@ const kpStorage = ['storage']
 const kpAllLampsCompleted = ['storage', 'allLampsCompleted']
 const kpIsTestRunning = ['storage', 'isTestRunning']
 const kpIsTestStarted = ['hmi', 'isTestStarted']
+const kpIsTestCancelled = ['hmi', 'isCancelled']
 const kpLampTestCompleted = ['storage', 'allLampsCompleted']
 const kpAllContactorsCompleted = ['storage', 'allContactorsCompleted']
 const kpBeforeContactorTurnoffDelay = ['delays', 'beforeContactorTurnoff']
@@ -39,6 +40,7 @@ module.exports = {
   kpAllLampsCompleted,
   kpIsTestRunning,
   kpIsTestStarted,
+  kpIsTestCancelled,
   kpLampTestCompleted,
   kpAllContactorsCompleted,
   kpBeforeContactorTurnoffDelay,
