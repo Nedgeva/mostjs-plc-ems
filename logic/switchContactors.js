@@ -12,7 +12,7 @@ const {
   kpContactorDisabledTimestamp,
   kpContactorEnabled,
   kpContactorsEncs,
-} = require("../constants/keypaths");
+} = require('../constants/keypaths')
 
 const {
   getKPContactorTestEnded,
@@ -52,7 +52,7 @@ const blinkContactorsInEnclosure = (activeIO, prevIO) =>
 
     // contactor was previously enabled and ON-delay has passed
     // disable contactor and set waiting time before enabling next contactor
-    if (isContactorEnabled) {
+    if (isContactorEnabled && !encContactorsEnded) {
       const updatedIO = activeIO
         .updateIn(
           kpContactorEnabled,
@@ -111,14 +111,26 @@ const switchContactors = (prevIO, IO) => {
   const isTestRunning = prevIO.getIn(kpIsTestRunning)
   const isTestCancelled = IO.getIn(kpIsTestCancelled)
 
-  const isTestActive = ((isTestStarted || isTestRunning)
-    && !isTestCancelled
-  )
+  const isTestActive = isTestStarted || isTestRunning
+
+  /* reset if test cancelled */
+  if (isTestCancelled) {
+    const updatedIO = IO
+      .updateIn(
+        kpStorage,
+        () => IO.getIn(kpStorage),
+      )
+
+    return {
+      seed: updatedIO,
+      value: IO,
+    }
+  }
 
   /* return early if no test running */
   if (!isTestActive) {
     return {
-      seed: prevIO,
+      seed: prevIO, // changed from prevIO
       value: IO,
     }
   }
@@ -154,8 +166,9 @@ const switchContactors = (prevIO, IO) => {
   const turnoffDelay = IO.getIn(kpBeforeContactorTurnoffDelay)
   const turnonDelay = IO.getIn(kpBeforeNextContactorDelay)
 
-  const isDelayed = ((contactorEnabledAt !== 0 && Date.now() < contactorEnabledAt + turnoffDelay) ||
-    (contactorDisabledAt !== 0 && Date.now() < contactorDisabledAt + turnonDelay)
+  const now = Date.now()
+  const isDelayed = ((contactorEnabledAt !== 0 && now < contactorEnabledAt + turnoffDelay) ||
+    (contactorDisabledAt !== 0 && now < contactorDisabledAt + turnonDelay)
   )
 
   /* return if delayed */

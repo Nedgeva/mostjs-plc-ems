@@ -5,6 +5,7 @@ const mapRegistersToIOScheme = require('./transformation/input')
 const mapIOSchemeToRegisters = require('./transformation/output')
 const switchLamps = require('./logic/switchLamps')
 const switchContactors = require('./logic/switchContactors')
+const resetOutputs = require('./logic/resetOutputs')
 
 const {
   storeConnections,
@@ -33,7 +34,7 @@ const pushSocketMessage = require('./side-effects/socketIOEffects')
 
 const mbopts = {
   port: 502,
-  host: 'localhost',
+  host: 'localhost', // '10.1.132.195',
 }
 
 const source = most
@@ -46,23 +47,27 @@ const source = most
   )
   .tap(emitProceedEvent)
   .combine(passIOScheme, most.periodic(1))
-  .sampleWith(most.fromEvent('proceed', mbEmitter))
   .combine(injectHMIMessages, socketIOsource)
+  .sampleWith(most.fromEvent('proceed', mbEmitter))
   .flatMap(o => most.fromPromise(requestModbusRegisters(o)))
   .map(mapRegistersToIOScheme)
   .loop(switchLamps, ioScheme)
   .loop(switchContactors, ioScheme)
+  .loop(resetOutputs, ioScheme)
   .map(mapIOSchemeToRegisters)
   .flatMap(o => most.fromPromise(writeModbusRegisters(o)))
-  .multicast()
+  // .multicast()
 
 source
-  .tap(emitProceedEventDelayed(250))
-  .tap(v => console.log(v.getIn(['outputs', 'discrete'])))
+  .tap(emitProceedEventDelayed(100))
+  // .tap(v => console.dir(v.getIn(['outputs', 'discrete', 'enc2', 'contactors'])))
+  // .tap(v => console.dir(v.getIn(['storage'])))
+  .throttle(500)
+  .tap(pushSocketMessage)
   .drain()
   .catch(ex => console.error(ex))
 
-source
-  .throttle(1000)
+/* source
+  .throttle(500)
   .tap(pushSocketMessage)
-  .drain()
+  .drain() */

@@ -29,13 +29,13 @@ const mapIOSchemeToRegisters = (ioScheme) => {
 
   const enc1LampsWord = boolArrayToBuffer(enc1Lamps)
   const enc1ContactorsWord12 = boolArrayToBuffer(enc1Contactors.slice(0, 16))
-  const enc1ContactorsWord22 = boolArrayToBuffer(enc1Contactors.slice(15, 32))
+  const enc1ContactorsWord22 = boolArrayToBuffer(enc1Contactors.slice(16, 32))
   const enc2LampsWord = boolArrayToBuffer(enc2Lamps)
   const enc2ContactorsWord12 = boolArrayToBuffer(enc2Contactors.slice(0, 16))
-  const enc2ContactorsWord22 = boolArrayToBuffer(enc2Contactors.slice(15, 32))
+  const enc2ContactorsWord22 = boolArrayToBuffer(enc2Contactors.slice(16, 32))
   const enc4LampsWord = boolArrayToBuffer(enc4Lamps)
   const enc4ContactorsWord12 = boolArrayToBuffer(enc4Contactors.slice(0, 16))
-  const enc4ContactorsWord22 = boolArrayToBuffer(enc4Contactors.slice(15, 20))
+  const enc4ContactorsWord22 = boolArrayToBuffer(enc4Contactors.slice(16, 20))
 
   const dataToWrite = [
     enc1LampsWord,

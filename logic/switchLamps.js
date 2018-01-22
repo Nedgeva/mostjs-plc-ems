@@ -11,7 +11,7 @@ const {
   kpIsTestCancelled,
   kpLampTestCompleted,
   kpLampsEncs,
-} = require("../constants/keypaths");
+} = require('../constants/keypaths')
 
 const {
   getKPLampTestEnded,
@@ -91,14 +91,26 @@ const switchLamps = (prevIO, IO) => {
   const isTestRunning = prevIO.getIn(kpIsTestRunning)
   const isTestCancelled = IO.getIn(kpIsTestCancelled)
 
-  const isTestActive = ((isTestStarted || isTestRunning)
-    && !isTestCancelled
-  )
+  const isTestActive = isTestStarted || isTestRunning
+
+  /* reset if test cancelled */
+  if (isTestCancelled) {
+    const updatedIO = IO
+      .updateIn(
+        kpStorage,
+        () => IO.getIn(kpStorage),
+      )
+
+    return {
+      seed: updatedIO,
+      value: IO,
+    }
+  }
 
   /* return early if no test running */
   if (!isTestActive) {
     return {
-      seed: prevIO,
+      seed: IO,
       value: IO,
     }
   }
@@ -124,8 +136,9 @@ const switchLamps = (prevIO, IO) => {
   const lampDelay = IO.getIn(kpBeforeNextLampDelay)
   const encDelay = IO.getIn(kpBeforeLampTurnOffDelay)
 
-  const isDelayed = ((lampIgnitedAt !== 0 && Date.now() < lampIgnitedAt + lampDelay) ||
-    (lampCompletedAt !== 0 && Date.now() < lampCompletedAt + encDelay)
+  const now = Date.now()
+  const isDelayed = ((lampIgnitedAt !== 0 && now < lampIgnitedAt + lampDelay) ||
+    (lampCompletedAt !== 0 && now < lampCompletedAt + encDelay)
   )
 
   /* return if delayed */

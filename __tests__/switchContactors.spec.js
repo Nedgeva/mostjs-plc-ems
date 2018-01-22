@@ -139,9 +139,9 @@ test('should enable/disable contactors one by one in enc 4', (t) => {
 })
 
 test('contactor test should be completed', (t) => {
-  const startIndex = 2 
+  const startIndex = 2
     + (t.context.enc1ContactorsNum * 2)
-    + 1 
+    + 1
     + (t.context.enc2ContactorsNum * 2)
     + 1
     + (t.context.enc4ContactorsNum * 2)
@@ -178,7 +178,7 @@ test('contactor test should pay respect to cancellation', (t) => {
   return source
     .observe(x => resultList.push(x))
     .then(() => t.deepEqual(
-      resultList[4].getIn(keyPath1), 
+      resultList[4].getIn(keyPath1),
       Array(t.context.enc1ContactorsNum).fill(false),
     ))
 })

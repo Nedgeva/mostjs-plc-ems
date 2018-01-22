@@ -116,15 +116,14 @@ test('lamps of enc 2 should turn on one by one, and then switchoff', (t) => {
   // should disable all four lamps of enc 2 after 3sec
   t.deepEqual(
     t.context.resultList[i].getIn(keyPath2),
-    Array(t.context.enc2LampsNum).fill(false)
+    Array(t.context.enc2LampsNum).fill(false),
   )
 })
 
 test('lamps of enc 4 should turn on one by one, and then switchoff', (t) => {
-  const keyPath2 = getKPLampsOutputs(2)
   const keyPath4 = getKPLampsOutputs(4)
 
-  const startIndex = 2 
+  const startIndex = 2
     + t.context.enc1LampsNum
     + 2
     + t.context.enc2LampsNum
@@ -144,12 +143,12 @@ test('lamps of enc 4 should turn on one by one, and then switchoff', (t) => {
   // should disable all four lamps of enc 2 after 3sec
   t.deepEqual(
     t.context.resultList[i].getIn(keyPath4),
-    Array(t.context.enc4LampsNum).fill(false)
+    Array(t.context.enc4LampsNum).fill(false),
   )
 })
 
 test('lamp test should be completed', (t) => {
-  const startIndex = 2 
+  const startIndex = 2
     + t.context.enc1LampsNum
     + 2
     + t.context.enc2LampsNum
@@ -185,7 +184,7 @@ test('lamp test should pay respect to cancellation', (t) => {
   return source
     .observe(x => resultList.push(x))
     .then(() => t.deepEqual(
-      resultList[7].getIn(keyPath1), 
+      resultList[7].getIn(keyPath1),
       Array(t.context.enc1LampsNum).fill(false),
     ))
 })
