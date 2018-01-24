@@ -16,6 +16,7 @@ const {
 const {
   resolveSocketIOInstance,
   socketIOsource,
+  destroySockets,
 } = require('./connection/socketio')
 
 const {
@@ -37,37 +38,42 @@ const mbopts = {
   host: 'localhost', // '10.1.132.195',
 }
 
-const source = most
-  .combineArray(
-    storeConnections(ioScheme),
-    [
-      most.fromPromise(resolveSocketIOInstance()),
-      most.fromPromise(resolveModbusConnection(mbopts)),
-    ],
-  )
-  .tap(emitProceedEvent)
-  .combine(passIOScheme, most.periodic(1))
-  .combine(injectHMIMessages, socketIOsource)
-  .sampleWith(most.fromEvent('proceed', mbEmitter))
-  .flatMap(o => most.fromPromise(requestModbusRegisters(o)))
-  .map(mapRegistersToIOScheme)
-  .loop(switchLamps, ioScheme)
-  .loop(switchContactors, ioScheme)
-  .loop(resetOutputs, ioScheme)
-  .map(mapIOSchemeToRegisters)
-  .flatMap(o => most.fromPromise(writeModbusRegisters(o)))
-  // .multicast()
+let samplerEventCount = 0
 
-source
-  .tap(emitProceedEventDelayed(100))
-  // .tap(v => console.dir(v.getIn(['outputs', 'discrete', 'enc2', 'contactors'])))
-  // .tap(v => console.dir(v.getIn(['storage'])))
-  .throttle(500)
-  .tap(pushSocketMessage)
-  .drain()
-  .catch(ex => console.error(ex))
+const app = (evtName) => {
+  const source = most
+    .combineArray(
+      storeConnections(ioScheme),
+      [
+        most.fromPromise(resolveSocketIOInstance()),
+        most.fromPromise(resolveModbusConnection(mbopts)),
+      ],
+    )
+    .tap(() => emitProceedEvent(evtName))
+    .combine(passIOScheme, most.periodic(1))
+    .combine(injectHMIMessages, socketIOsource)
+    .sampleWith(most.fromEvent(evtName, mbEmitter))
+    .flatMap(o => most.fromPromise(requestModbusRegisters(o)))
+    .map(mapRegistersToIOScheme)
+    .loop(switchLamps, ioScheme)
+    .loop(switchContactors, ioScheme)
+    .loop(resetOutputs, ioScheme)
+    .map(mapIOSchemeToRegisters)
+    .flatMap(o => most.fromPromise(writeModbusRegisters(o)))
+    .tap(emitProceedEventDelayed(evtName, 100))
+    .throttle(500)
+    .tap(pushSocketMessage)
 
-/* source
-  .throttle(500)
-  .tap(pushSocketMessage)
-  .drain() */
+  source
+    .observe(() => {})
+    .catch((ex) => {
+      console.error(ex)
+      destroySockets()
+      samplerEventCount += 1
+      setTimeout(app, 2000, String(samplerEventCount))
+    })
+
+  return source
+}
+
+app(String(samplerEventCount))

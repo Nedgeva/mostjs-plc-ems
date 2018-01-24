@@ -12,7 +12,11 @@ const socketIOsource = most
   .flatMap(o => most.fromEvent('hmi-message', o))
   .startWith(null)
 
+const destroySockets = () =>
+  socketio.close()
+
 module.exports = {
   resolveSocketIOInstance,
   socketIOsource,
+  destroySockets,
 }
