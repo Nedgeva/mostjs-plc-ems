@@ -67,7 +67,7 @@ const app = (evtName) => {
   source
     .observe(() => {})
     .catch((ex) => {
-      console.error(ex)
+      // console.error(ex)
       destroySockets()
       samplerEventCount += 1
       setTimeout(app, 2000, String(samplerEventCount))

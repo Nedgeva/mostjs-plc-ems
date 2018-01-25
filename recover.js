@@ -5,7 +5,7 @@ let cnt = 0
 const createStream = () =>
   most.from(Array(9).fill(0))
     .scan(v => v + 1, 0)
-    .tap(() => { 
+    .tap(() => {
       cnt += 1
       if (cnt % 3 && cnt < 10) {
         throw new Error('test')
