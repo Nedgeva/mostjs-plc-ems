@@ -151,6 +151,10 @@ const switchContactors = (prevIO, IO) => {
   if (isContactorTestCompleted) {
     const updatedIO = IO
       .updateIn(
+        kpStorage,
+        () => prevIO.getIn(kpStorage),
+      )
+      .updateIn(
         kpAllContactorsCompleted,
         () => isContactorTestCompleted,
       )

@@ -26,6 +26,7 @@ const mapIOSchemeToRegisters = (ioScheme) => {
   const enc2Contactors = ioScheme.getIn(getKPContactorsOutput(2))
   const enc4Lamps = ioScheme.getIn(getKPLampsOutputs(4))
   const enc4Contactors = ioScheme.getIn(getKPContactorsOutput(4))
+  const enc11Lamps = ioScheme.getIn(getKPLampsOutputs(11))
 
   const enc1LampsWord = boolArrayToBuffer(enc1Lamps)
   const enc1ContactorsWord12 = boolArrayToBuffer(enc1Contactors.slice(0, 16))
@@ -36,6 +37,7 @@ const mapIOSchemeToRegisters = (ioScheme) => {
   const enc4LampsWord = boolArrayToBuffer(enc4Lamps)
   const enc4ContactorsWord12 = boolArrayToBuffer(enc4Contactors.slice(0, 16))
   const enc4ContactorsWord22 = boolArrayToBuffer(enc4Contactors.slice(16, 20))
+  const enc11LampsWord = boolArrayToBuffer(enc11Lamps)
 
   const dataToWrite = [
     enc1LampsWord,
@@ -47,6 +49,7 @@ const mapIOSchemeToRegisters = (ioScheme) => {
     enc4LampsWord,
     enc4ContactorsWord12,
     enc4ContactorsWord22,
+    enc11LampsWord,
   ]
 
   return ioScheme.updateIn(kpDataToWrite, () => dataToWrite)

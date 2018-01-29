@@ -55,6 +55,10 @@ const mapRegistersToIOScheme = (ioScheme) => {
 
   const enc4Contactors = enc4Contactors12.concat(enc4Contactors22)
 
+  /* enc 11 mappings */
+  const enc11Lamps = regToBoolArray(registers[9])
+    .slice(0, 9)
+
   return ioScheme
     .updateIn(getKPLampsOutputs(1), () => enc1Lamps)
     .updateIn(getKPContactorsOutput(1), () => enc1Contactors)
@@ -62,6 +66,7 @@ const mapRegistersToIOScheme = (ioScheme) => {
     .updateIn(getKPContactorsOutput(2), () => enc2Contactors)
     .updateIn(getKPLampsOutputs(4), () => enc4Lamps)
     .updateIn(getKPContactorsOutput(4), () => enc4Contactors)
+    .updateIn(getKPLampsOutputs(11), () => enc11Lamps)
 }
 
 module.exports = mapRegistersToIOScheme
