@@ -27,6 +27,10 @@ test.beforeEach((t) => {
     .getIn(getKPLampsOutputs(4))
     .length
 
+  const enc11LampsNum = ioScheme
+    .getIn(getKPLampsOutputs(11))
+    .length
+
   const ioWithTestEnabled = ioScheme
     .updateIn(kpIsTestStarted, () => true)
 
@@ -41,13 +45,19 @@ test.beforeEach((t) => {
   const pauseIdxEnc1 = enc1LampsNum + 1
   const pauseIdxEnc2 = pauseIdxEnc1 + enc2LampsNum + 2
   const pauseIdxEnc4 = pauseIdxEnc2 + enc4LampsNum + 2
+  const pauseIdxEnc11 = pauseIdxEnc4 + enc11LampsNum + 2
 
   let cnt = 0
   const fastForwardTime = () => {
     cnt += 1
     mockdate.set(Date.now() + 1001)
 
-    if ([pauseIdxEnc1, pauseIdxEnc2, pauseIdxEnc4].includes(cnt)) {
+    if ([
+      pauseIdxEnc1,
+      pauseIdxEnc2,
+      pauseIdxEnc4,
+      pauseIdxEnc11,
+    ].includes(cnt)) {
       mockdate.set(Date.now() + 3001)
     }
   }
@@ -56,6 +66,7 @@ test.beforeEach((t) => {
     enc1LampsNum,
     enc2LampsNum,
     enc4LampsNum,
+    enc11LampsNum,
     resultList: [],
   })
 

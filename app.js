@@ -35,7 +35,7 @@ const pushSocketMessage = require('./side-effects/socketIOEffects')
 
 const mbopts = {
   port: 502,
-  host: 'localhost', // '10.1.132.195',
+  host: 'localhost', // '10.1.132.195', // 
 }
 
 let samplerEventCount = 0
@@ -60,8 +60,8 @@ const app = (evtName) => {
     .loop(resetOutputs, ioScheme)
     .map(mapIOSchemeToRegisters)
     .flatMap(o => most.fromPromise(writeModbusRegisters(o)))
-    .tap(emitProceedEventDelayed(evtName, 100))
-    .throttle(500)
+    .tap(emitProceedEventDelayed(evtName, 25))
+    .throttle(200)
     .tap(pushSocketMessage)
 
   source
